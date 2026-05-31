@@ -1,0 +1,10 @@
+{
+  "name": "Workout OS",
+  "short_name": "WorkoutOS",
+  "description": "Talal's hybrid longevity workout tracker",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#090A0D",
+  "theme_color": "#D7FF62",
+  "icons": [{ "src": "/icon.svg", "sizes": "512x512", "type": "image/svg+xml", "purpose": "any maskable" }]
+}
