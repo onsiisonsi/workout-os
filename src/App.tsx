@@ -94,20 +94,20 @@ const DAYS: WorkoutDay[] = [
   },
   {
     key: 'tue',
-    title: 'Lower A',
-    subtitle: 'KOT knees, ankles, hips',
-    intent: 'Build resilient knees, ankles, hamstrings, adductors, and deep lower-body mobility.',
+    title: 'Day 2 Run + Lower',
+    subtitle: 'Easy run, KOT knees, ankles, hips',
+    intent: 'Lock in Talal’s Day 2 run while keeping the lower-body work joint-friendly, resilient, and not so heavy that it ruins consistency.',
     totalMinutes: 60,
     warmup: ['Tibialis raises 2 x 20', 'Patrick step-down 2 x 10/side', 'Couch stretch 1 min/side', 'Deep squat pry 1–2 min'],
     exercises: [
+      ex('day2-run', 'Day 2 Easy Run', 1, '25–35 min', 'Zone 2 / conversational', 0, 'cardio', ['Start slower than you want.', 'Nasal breathing or short-sentence pace.', 'Stop with legs feeling better, not destroyed.'], ['easy zone 2 running technique', 'peter attia zone 2 running']),
       ex('atg-split', 'ATG Split Squat Progression', 3, '6–10/side', '2 RIR', 90, 'mobility', ['Front knee tracks over toes.', 'Back glute squeezed.', 'Use support until range is owned.'], ['knees over toes atg split squat tutorial', 'ben patrick atg split squat form']),
-      ex('rdl', 'Romanian Deadlift', 3, '6–10', '1–3 RIR', 120, 'strength', ['Soft knees.', 'Hips back.', 'Feel hamstring stretch without losing spine.'], ['romanian deadlift technique renaissance periodization']),
       ex('reverse-sled', 'Reverse Sled Drag / Backward Treadmill', 1, '5–8 min', 'Smooth burn', 30, 'prehab', ['Upright torso.', 'Push through toes.', 'Continuous knee-friendly burn.'], ['knees over toes reverse sled drag tutorial']),
-      ex('calf', 'Calf Raise', 3, '10–20', '0–2 RIR', 60, 'prehab', ['Full stretch.', 'Full lockout.', 'Pause top and bottom.'], ['calf raise proper form']),
-      ex('ham-curl', 'Nordic Regression / Hamstring Curl', 3, '6–12', '1–3 RIR', 90, 'strength', ['Slow eccentric.', 'Hips extended if Nordic.', 'No cramping heroics.'], ['nordic hamstring curl progression', 'hamstring curl technique']),
+      ex('calf-tib', 'Calf + Tibialis Superset', 3, '12–20 each', '0–2 RIR', 45, 'prehab', ['Full calf stretch.', 'Pull toes high on tib raises.', 'Control both ends.'], ['knees over toes tibialis raise', 'calf raise proper form']),
+      ex('ham-curl', 'Nordic Regression / Hamstring Curl', 2, '6–12', '1–3 RIR', 90, 'strength', ['Slow eccentric.', 'Hips extended if Nordic.', 'No cramping heroics after the run.'], ['nordic hamstring curl progression', 'hamstring curl technique']),
       ex('copenhagen', 'Copenhagen Plank / Adductor', 2, '20–40s/side', 'Controlled', 60, 'prehab', ['Straight line.', 'Adductor pulls you up.', 'Regress lever if needed.'], ['copenhagen plank progression technique']),
     ],
-    finisher: ['Hip CARS 3 slow reps/side', '90/90 switches 2 x 8/side'],
+    finisher: ['Hip CARS 3 slow reps/side', '90/90 switches 2 x 8/side', 'Optional couch stretch 60s/side if run felt tight'],
   },
   {
     key: 'wed',
@@ -124,20 +124,20 @@ const DAYS: WorkoutDay[] = [
   },
   {
     key: 'thu',
-    title: 'Upper B',
-    subtitle: 'Shoulders, chest, arms',
-    intent: 'Primary aesthetics day: delts, upper chest, lats, and arms.',
+    title: 'Day 4 Run + Upper Pump',
+    subtitle: 'Run, shoulders, chest, arms',
+    intent: 'Keep Talal’s Day 4 run, then hit the aesthetic work he likes without turning the session into a two-hour monster.',
     totalMinutes: 60,
     warmup: ['Band external rotations 2 x 15/side', 'Wall slides 2 x 10', 'Push-up plus 2 x 10', 'Light lateral raises 1 x 20'],
     exercises: [
-      ex('ohp', 'Overhead Press / High-incline DB Press', 3, '5–8', '1–3 RIR', 120, 'strength', ['Glutes tight.', 'Ribs down.', 'Press slightly back, not forward.'], ['overhead press perfect form athlean x']),
+      ex('day4-run', 'Day 4 Run', 1, '20–30 min', 'Easy-moderate / conversational', 0, 'cardio', ['Stay smooth and springy.', 'Leave one more gear in reserve.', 'If legs feel heavy, incline walk instead.'], ['easy run technique posture cadence', 'zone 2 running form']),
       ex('db-press', 'Flat DB / Machine Chest Press', 3, '8–12', '1–2 RIR', 90, 'hypertrophy', ['Controlled eccentric.', 'Stable shoulder.', 'Press through mid-hand.'], ['dumbbell bench press proper form renaissance periodization']),
       ex('one-arm-row', 'One-arm Cable Row', 3, '8–12/side', '1–2 RIR', 75, 'hypertrophy', ['Reach long.', 'Pull elbow back.', 'Do not twist excessively.'], ['one arm cable row technique']),
-      ex('pulldown-b', 'Pulldown / Pull-up Different Grip', 3, '8–12', '1–2 RIR', 90, 'hypertrophy', ['Use grip different from Monday.', 'Depress scapula first.', 'Smooth reps.'], ['lat pulldown grip technique']),
       ex('lat-raise-b', 'Cable Lateral Raise', 3, '15–25', '0–2 RIR', 45, 'hypertrophy', ['Constant tension.', 'No trap shrug.', 'Own the negative.'], ['cable lateral raise technique mike israetel']),
+      ex('rear-delt-fly', 'Rear Delt Fly / Face Pull', 3, '15–25', '0–2 RIR', 45, 'prehab', ['Elbows wide.', 'Thumbs slightly out.', 'Rear delts and rotator cuff, not traps.'], ['rear delt fly technique', 'athlean x face pull perfect form']),
       ex('arms', 'Rope Pressdown + Cable Curl', 3, '10–15 each', '0–2 RIR', 60, 'hypertrophy', ['Superset.', 'Elbows stay fixed.', 'Full range.'], ['rope tricep pressdown technique', 'cable curl proper form']),
     ],
-    finisher: ['Face pulls 2 x 20', 'Suitcase carry 2 x 40m/side'],
+    finisher: ['Suitcase carry 2 x 40m/side', 'Optional dead hang 60s total'],
   },
   {
     key: 'fri',
@@ -182,6 +182,13 @@ const DAYS: WorkoutDay[] = [
     ],
     finisher: ['Sleep early. This is where gains consolidate.'],
   },
+];
+
+const FAVORITE_WORK = [
+  'Runs are fixed on Day 2 and Day 4.',
+  'Keep the KOT staples: ATG split squat, reverse sled/backward treadmill, tibialis, Patrick step-down, couch stretch.',
+  'Keep the posture/aesthetics staples: pull-ups or pulldowns, cable laterals, face pulls/rear delts, incline/DB pressing, curls/pressdowns.',
+  'Keep the movement/prehab staples Talal has been doing: dead hangs, deep squat, 90/90 switches, CARS, carries, reverse hyper/back extension.',
 ];
 
 function ex(id: string, name: string, sets: number, reps: string, rir: string, restSec: number, category: Exercise['category'], cues: string[], videoQueries: string[]): Exercise {
@@ -358,7 +365,7 @@ function App() {
           <span className={`pill sync ${syncStatus}`}>{CLOUD_ENABLED ? syncStatus : 'local-first'}</span>
         </div>
         <h1>Talal's Hybrid Longevity Program</h1>
-        <p>Upper-body aesthetics, posture, KOT joints, mobility, Zone 2, and VO2 — fixed days, one hour.</p>
+        <p>Upper-body aesthetics, posture, KOT joints, mobility, and fixed Day 2 + Day 4 runs — one hour, minimal moving parts.</p>
         <div className="hero-stats">
           <div><strong>{completionPct}%</strong><span>today</span></div>
           <div><strong>{day.totalMinutes}</strong><span>min</span></div>
@@ -573,6 +580,10 @@ function LibraryView({ openVideo }: { openVideo: (exercise: Exercise) => void })
     <section className="panel">
       <h2>Exercise library</h2>
       <p className="muted">Tap any exercise for technique videos and cues.</p>
+      <div className="favorites-note">
+        <h3>Work OS notes baked in</h3>
+        <ul>{FAVORITE_WORK.map((item) => <li key={item}>{item}</li>)}</ul>
+      </div>
       <div className="library-grid">
         {all.map((exercise) => <button className={`library-item ${exercise.category}`} key={exercise.id} onClick={() => openVideo(exercise)}><span>{exercise.category}</span><strong>{exercise.name}</strong><small>{exercise.reps}</small></button>)}
       </div>
