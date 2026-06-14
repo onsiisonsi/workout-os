@@ -76,8 +76,8 @@ const CLOUD_ENABLED = Boolean(import.meta.env.VITE_SUPABASE_URL && import.meta.e
 
 const DAYS: WorkoutDay[] = [
   {
-    key: 'mon',
-    title: 'Upper A',
+    key: 'sun',
+    title: 'Day 1 Upper A',
     subtitle: 'Pull, posture, V-taper',
     intent: 'Build lats, upper back, rear delts, and posture while still pressing enough for aesthetics.',
     totalMinutes: 60,
@@ -93,7 +93,7 @@ const DAYS: WorkoutDay[] = [
     finisher: ['Farmer carry 3 x 40–60m', 'Optional deep squat hold 2 min'],
   },
   {
-    key: 'tue',
+    key: 'mon',
     title: 'Day 2 Run + Lower',
     subtitle: 'Easy run, KOT knees, ankles, hips',
     intent: 'Lock in Talal’s Day 2 run while keeping the lower-body work joint-friendly, resilient, and not so heavy that it ruins consistency.',
@@ -110,7 +110,7 @@ const DAYS: WorkoutDay[] = [
     finisher: ['Hip CARS 3 slow reps/side', '90/90 switches 2 x 8/side', 'Optional couch stretch 60s/side if run felt tight'],
   },
   {
-    key: 'wed',
+    key: 'tue',
     title: 'Zone 2 + Flow',
     subtitle: 'Heart base + mobility',
     intent: 'Build aerobic base and recover while improving full-body positions.',
@@ -123,7 +123,7 @@ const DAYS: WorkoutDay[] = [
     finisher: ['Walk 5 min easy if time remains'],
   },
   {
-    key: 'thu',
+    key: 'wed',
     title: 'Day 4 Run + Upper Pump',
     subtitle: 'Run, shoulders, chest, arms',
     intent: 'Keep Talal’s Day 4 run, then hit the aesthetic work he likes without turning the session into a two-hour monster.',
@@ -140,7 +140,7 @@ const DAYS: WorkoutDay[] = [
     finisher: ['Suitcase carry 2 x 40m/side', 'Optional dead hang 60s total'],
   },
   {
-    key: 'fri',
+    key: 'thu',
     title: 'Full Body Strength',
     subtitle: 'Posterior chain + carries',
     intent: 'Become strong, robust, and athletic without grinding your joints down.',
@@ -157,7 +157,7 @@ const DAYS: WorkoutDay[] = [
     finisher: ['If energy is low, skip extra conditioning. Strength quality wins.'],
   },
   {
-    key: 'sat',
+    key: 'fri',
     title: 'VO2 + Movement',
     subtitle: 'Heart ceiling + athletic flow',
     intent: 'One weekly high-intensity cardio dose plus Ido-style movement capacity.',
@@ -170,7 +170,7 @@ const DAYS: WorkoutDay[] = [
     finisher: ['Cooldown 5 min easy', 'Optional sauna later if available'],
   },
   {
-    key: 'sun',
+    key: 'sat',
     title: 'Recovery',
     subtitle: 'Walk, sauna, reset',
     intent: 'Adaptation day. Minimum dose only; do not turn this into a secret workout.',
@@ -185,6 +185,7 @@ const DAYS: WorkoutDay[] = [
 ];
 
 const FAVORITE_WORK = [
+  'Day 1 is always Sunday; the weekly order runs Sunday → Saturday.',
   'Runs are fixed on Day 2 and Day 4.',
   'Keep the KOT staples: ATG split squat, reverse sled/backward treadmill, tibialis, Patrick step-down, couch stretch.',
   'Keep the posture/aesthetics staples: pull-ups or pulldowns, cable laterals, face pulls/rear delts, incline/DB pressing, curls/pressdowns.',
@@ -196,8 +197,8 @@ function ex(id: string, name: string, sets: number, reps: string, rir: string, r
 }
 
 function todayIndex() {
-  const js = new Date().getDay();
-  return js === 0 ? 6 : js - 1;
+  // Workout OS Day 1 is always Sunday. JS getDay() is already Sunday=0.
+  return new Date().getDay();
 }
 
 function isoToday() {
@@ -365,7 +366,7 @@ function App() {
           <span className={`pill sync ${syncStatus}`}>{CLOUD_ENABLED ? syncStatus : 'local-first'}</span>
         </div>
         <h1>Talal's Hybrid Longevity Program</h1>
-        <p>Upper-body aesthetics, posture, KOT joints, mobility, and fixed Day 2 + Day 4 runs — one hour, minimal moving parts.</p>
+        <p>Day 1 starts Sunday. Upper-body aesthetics, posture, KOT joints, mobility, and fixed Day 2 + Day 4 runs — one hour, minimal moving parts.</p>
         <div className="hero-stats">
           <div><strong>{completionPct}%</strong><span>today</span></div>
           <div><strong>{day.totalMinutes}</strong><span>min</span></div>
