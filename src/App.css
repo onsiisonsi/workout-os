@@ -98,6 +98,8 @@ ul { padding-left: 20px; margin: 0; color: var(--muted); line-height: 1.55; }
 .sheet-header { display: grid; grid-template-columns: 1fr 44px; align-items: start; gap: 10px; }
 .sheet-header .icon-button { font-size: 26px; line-height: 1; }
 .video-sheet p { color: #c9c2b6; }
+.video-embed { position: relative; width: 100%; aspect-ratio: 16 / 9; margin: 14px 0; overflow: hidden; border-radius: 18px; border: 1px solid var(--line); background: #050506; }
+.video-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 .video-links { display: grid; gap: 9px; margin: 14px 0; }
 .video-links a { display: flex; align-items: center; gap: 8px; padding: 13px; border: 1px solid var(--line); border-radius: 16px; color: var(--text); text-decoration: none; background: rgba(255,255,255,.05); }
 .log-list, .library-grid, .bar-list { display: grid; gap: 10px; margin-top: 14px; }

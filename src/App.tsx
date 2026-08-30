@@ -22,29 +22,7 @@ import {
   Video,
 } from 'lucide-react';
 import './App.css';
-
-type Exercise = {
-  id: string;
-  name: string;
-  sets: number;
-  reps: string;
-  rir?: string;
-  restSec: number;
-  category: 'strength' | 'hypertrophy' | 'mobility' | 'cardio' | 'prehab';
-  cues: string[];
-  videoQueries: string[];
-};
-
-type WorkoutDay = {
-  key: string;
-  title: string;
-  subtitle: string;
-  intent: string;
-  totalMinutes: number;
-  warmup: string[];
-  exercises: Exercise[];
-  finisher: string[];
-};
+import { DAYS, FAVORITE_WORK, type Exercise, type WorkoutDay } from './program';
 
 type SetEntry = {
   reps: string;
@@ -73,128 +51,6 @@ type Tab = 'today' | 'log' | 'library' | 'progress' | 'settings';
 const STORAGE_KEY = 'onsii-workout-os-v1';
 const DEVICE_KEY = 'onsii-workout-device-id';
 const CLOUD_ENABLED = Boolean(import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY);
-
-const DAYS: WorkoutDay[] = [
-  {
-    key: 'sun',
-    title: 'Day 1 Upper A',
-    subtitle: 'Pull, posture, V-taper',
-    intent: 'Build lats, upper back, rear delts, and posture while still pressing enough for aesthetics.',
-    totalMinutes: 60,
-    warmup: ['Dead hang 2 x 30–45s', 'Band pull-aparts 2 x 20', 'Scap push-ups 2 x 10', 'Thoracic extensions 1–2 min'],
-    exercises: [
-      ex('pullup', 'Weighted Pull-up / Lat Pulldown', 3, '6–10', '1–3 RIR', 120, 'strength', ['Chest tall, ribs down.', 'Drive elbows toward pockets.', 'Stop before shoulder rolls forward.'], ['weighted pull up technique athlean x', 'lat pulldown perfect form jeff cavaliere']),
-      ex('incline-db', 'Incline DB Press', 3, '6–10', '1–2 RIR', 120, 'hypertrophy', ['Scaps slightly tucked.', 'Elbows 30–60° from body.', 'Control the bottom.'], ['incline dumbbell press perfect form', 'athlean x incline dumbbell press']),
-      ex('chest-row', 'Chest-supported Row', 3, '8–12', '1–2 RIR', 90, 'hypertrophy', ['Pull with elbows, not hands.', 'Pause squeezed shoulder blades.', 'Keep chest on pad.'], ['chest supported row proper form', 'renaissance periodization row technique']),
-      ex('lat-raise-a', 'Cable Lateral Raise', 3, '12–20', '0–2 RIR', 60, 'hypertrophy', ['Lead with elbow.', 'Stop just above shoulder height.', 'Keep traps quiet.'], ['cable lateral raise technique renaissance periodization']),
-      ex('face-pull-a', 'Face Pull', 3, '15–25', '0–2 RIR', 45, 'prehab', ['Pull to forehead.', 'Rotate thumbs back.', 'Feel rear delts / external rotators.'], ['athlean x face pull perfect form']),
-      ex('incline-curl', 'Incline DB Curl', 2, '10–15', '0–2 RIR', 60, 'hypertrophy', ['Shoulders back.', 'Full stretch.', 'No swinging.'], ['incline dumbbell curl technique']),
-    ],
-    finisher: ['Farmer carry 3 x 40–60m', 'Optional deep squat hold 2 min'],
-  },
-  {
-    key: 'mon',
-    title: 'Day 2 Run + Lower',
-    subtitle: 'Easy run, KOT knees, ankles, hips',
-    intent: 'Lock in Talal’s Day 2 run while keeping the lower-body work joint-friendly, resilient, and not so heavy that it ruins consistency.',
-    totalMinutes: 60,
-    warmup: ['Tibialis raises 2 x 20', 'Patrick step-down 2 x 10/side', 'Couch stretch 1 min/side', 'Deep squat pry 1–2 min'],
-    exercises: [
-      ex('day2-run', 'Day 2 Easy Run', 1, '25–35 min', 'Zone 2 / conversational', 0, 'cardio', ['Start slower than you want.', 'Nasal breathing or short-sentence pace.', 'Stop with legs feeling better, not destroyed.'], ['easy zone 2 running technique', 'peter attia zone 2 running']),
-      ex('atg-split', 'ATG Split Squat Progression', 3, '6–10/side', '2 RIR', 90, 'mobility', ['Front knee tracks over toes.', 'Back glute squeezed.', 'Use support until range is owned.'], ['knees over toes atg split squat tutorial', 'ben patrick atg split squat form']),
-      ex('reverse-sled', 'Reverse Sled Drag / Backward Treadmill', 1, '5–8 min', 'Smooth burn', 30, 'prehab', ['Upright torso.', 'Push through toes.', 'Continuous knee-friendly burn.'], ['knees over toes reverse sled drag tutorial']),
-      ex('calf-tib', 'Calf + Tibialis Superset', 3, '12–20 each', '0–2 RIR', 45, 'prehab', ['Full calf stretch.', 'Pull toes high on tib raises.', 'Control both ends.'], ['knees over toes tibialis raise', 'calf raise proper form']),
-      ex('ham-curl', 'Nordic Regression / Hamstring Curl', 2, '6–12', '1–3 RIR', 90, 'strength', ['Slow eccentric.', 'Hips extended if Nordic.', 'No cramping heroics after the run.'], ['nordic hamstring curl progression', 'hamstring curl technique']),
-      ex('copenhagen', 'Copenhagen Plank / Adductor', 2, '20–40s/side', 'Controlled', 60, 'prehab', ['Straight line.', 'Adductor pulls you up.', 'Regress lever if needed.'], ['copenhagen plank progression technique']),
-    ],
-    finisher: ['Hip CARS 3 slow reps/side', '90/90 switches 2 x 8/side', 'Optional couch stretch 60s/side if run felt tight'],
-  },
-  {
-    key: 'tue',
-    title: 'Zone 2 + Flow',
-    subtitle: 'Heart base + mobility',
-    intent: 'Build aerobic base and recover while improving full-body positions.',
-    totalMinutes: 60,
-    warmup: ['5 min easy ramp on bike / incline walk / rower'],
-    exercises: [
-      ex('zone2', 'Zone 2 Cardio', 1, '40–45 min', 'Talk test', 0, 'cardio', ['Speak in short sentences.', 'Nose breathing if possible.', 'Do not drift into HIIT.'], ['peter attia zone 2 training explained']),
-      ex('hang-flow', 'Hang + Squat + Spine Flow', 1, '10–15 min', 'Easy', 0, 'mobility', ['Dead hang.', 'Deep squat breathing.', 'Thoracic rotations.', 'Light Jefferson curl only if pain-free.'], ['ido portal squat mobility routine', 'full body mobility flow ido portal']),
-    ],
-    finisher: ['Walk 5 min easy if time remains'],
-  },
-  {
-    key: 'wed',
-    title: 'Day 4 Run + Upper Pump',
-    subtitle: 'Run, shoulders, chest, arms',
-    intent: 'Keep Talal’s Day 4 run, then hit the aesthetic work he likes without turning the session into a two-hour monster.',
-    totalMinutes: 60,
-    warmup: ['Band external rotations 2 x 15/side', 'Wall slides 2 x 10', 'Push-up plus 2 x 10', 'Light lateral raises 1 x 20'],
-    exercises: [
-      ex('day4-run', 'Day 4 Run', 1, '20–30 min', 'Easy-moderate / conversational', 0, 'cardio', ['Stay smooth and springy.', 'Leave one more gear in reserve.', 'If legs feel heavy, incline walk instead.'], ['easy run technique posture cadence', 'zone 2 running form']),
-      ex('db-press', 'Flat DB / Machine Chest Press', 3, '8–12', '1–2 RIR', 90, 'hypertrophy', ['Controlled eccentric.', 'Stable shoulder.', 'Press through mid-hand.'], ['dumbbell bench press proper form renaissance periodization']),
-      ex('one-arm-row', 'One-arm Cable Row', 3, '8–12/side', '1–2 RIR', 75, 'hypertrophy', ['Reach long.', 'Pull elbow back.', 'Do not twist excessively.'], ['one arm cable row technique']),
-      ex('lat-raise-b', 'Cable Lateral Raise', 3, '15–25', '0–2 RIR', 45, 'hypertrophy', ['Constant tension.', 'No trap shrug.', 'Own the negative.'], ['cable lateral raise technique mike israetel']),
-      ex('rear-delt-fly', 'Rear Delt Fly / Face Pull', 3, '15–25', '0–2 RIR', 45, 'prehab', ['Elbows wide.', 'Thumbs slightly out.', 'Rear delts and rotator cuff, not traps.'], ['rear delt fly technique', 'athlean x face pull perfect form']),
-      ex('arms', 'Rope Pressdown + Cable Curl', 3, '10–15 each', '0–2 RIR', 60, 'hypertrophy', ['Superset.', 'Elbows stay fixed.', 'Full range.'], ['rope tricep pressdown technique', 'cable curl proper form']),
-    ],
-    finisher: ['Suitcase carry 2 x 40m/side', 'Optional dead hang 60s total'],
-  },
-  {
-    key: 'thu',
-    title: 'Full Body Strength',
-    subtitle: 'Posterior chain + carries',
-    intent: 'Become strong, robust, and athletic without grinding your joints down.',
-    totalMinutes: 60,
-    warmup: ['McGill curl-up 1 x 8/side', 'Side plank 1 x 30s/side', 'Glute bridge 2 x 12', 'Ankle rocks 1 x 15/side'],
-    exercises: [
-      ex('trap-dead', 'Trap-bar Deadlift / Deadlift', 3, '3–6', '2–3 RIR', 150, 'strength', ['No ugly reps.', 'Brace before pulling.', 'Stop when speed/form breaks.'], ['trap bar deadlift technique', 'deadlift form athlean x']),
-      ex('front-squat', 'Front Squat / Goblet Squat', 3, '5–8', '1–3 RIR', 120, 'strength', ['Tall torso.', 'Knees track toes.', 'Own the bottom.'], ['front squat proper form squat university', 'goblet squat technique']),
-      ex('dip', 'Weighted Dip / Push-up', 3, '6–12', '1–2 RIR', 90, 'hypertrophy', ['Shoulders down.', 'Controlled depth.', 'Use push-up if dips irritate shoulders.'], ['weighted dips proper form athlean x']),
-      ex('rear-row', 'Rear-delt Row', 3, '10–15', '0–2 RIR', 60, 'prehab', ['Elbows out.', 'Pull to upper chest.', 'Rear delts, not low back.'], ['rear delt row technique']),
-      ex('reverse-hyper', 'Reverse Hyper / Back Extension', 3, '10–15', '1–3 RIR', 60, 'prehab', ['Glutes finish.', 'No lumbar whipping.', 'Smooth tempo.'], ['reverse hyper technique', 'back extension glute focus technique']),
-      ex('carry', 'Farmer Carry / Sled Push', 1, '5–8 min', 'Strong', 30, 'strength', ['Tall posture.', 'Quiet ribs.', 'Walk with control.'], ['farmer carry technique', 'sled push technique']),
-    ],
-    finisher: ['If energy is low, skip extra conditioning. Strength quality wins.'],
-  },
-  {
-    key: 'fri',
-    title: 'VO2 + Movement',
-    subtitle: 'Heart ceiling + athletic flow',
-    intent: 'One weekly high-intensity cardio dose plus Ido-style movement capacity.',
-    totalMinutes: 60,
-    warmup: ['10 min easy ramp', '2–3 short pickups before hard intervals'],
-    exercises: [
-      ex('vo2', 'VO2 Intervals', 1, '4 x 4 min hard / 3 min easy', '8–9/10', 180, 'cardio', ['Hard but repeatable.', 'Do not sprint the first interval.', 'Use bike/rower to protect joints.'], ['peter attia vo2 max intervals 4x4']),
-      ex('movement-flow', 'Movement Flow', 1, '15–20 min', 'Playful', 0, 'mobility', ['Bear crawl.', 'Crab reach.', 'Cossack squat.', 'Hanging scap shrugs.', 'Spinal waves.'], ['ido portal movement flow beginner', 'nisma inyang mobility routine']),
-    ],
-    finisher: ['Cooldown 5 min easy', 'Optional sauna later if available'],
-  },
-  {
-    key: 'sat',
-    title: 'Recovery',
-    subtitle: 'Walk, sauna, reset',
-    intent: 'Adaptation day. Minimum dose only; do not turn this into a secret workout.',
-    totalMinutes: 30,
-    warmup: ['Easy walk outside if possible'],
-    exercises: [
-      ex('walk', 'Easy Walk', 1, '30–60 min', 'Very easy', 0, 'cardio', ['Nasal breathing.', 'Sunlight if possible.', 'Leave refreshed.'], ['zone 1 walking recovery benefits']),
-      ex('minimum-dose', 'Daily Mobility Minimum', 1, '8 min', 'Easy', 0, 'mobility', ['Dead hang.', 'Deep squat.', 'Couch stretch.', 'Band pull-aparts.', 'Tibialis.'], ['daily mobility routine deep squat dead hang']),
-    ],
-    finisher: ['Sleep early. This is where gains consolidate.'],
-  },
-];
-
-const FAVORITE_WORK = [
-  'Day 1 is always Sunday; the weekly order runs Sunday → Saturday.',
-  'Runs are fixed on Day 2 and Day 4.',
-  'Keep the KOT staples: ATG split squat, reverse sled/backward treadmill, tibialis, Patrick step-down, couch stretch.',
-  'Keep the posture/aesthetics staples: pull-ups or pulldowns, cable laterals, face pulls/rear delts, incline/DB pressing, curls/pressdowns.',
-  'Keep the movement/prehab staples Talal has been doing: dead hangs, deep squat, 90/90 switches, CARS, carries, reverse hyper/back extension.',
-];
-
-function ex(id: string, name: string, sets: number, reps: string, rir: string, restSec: number, category: Exercise['category'], cues: string[], videoQueries: string[]): Exercise {
-  return { id, name, sets, reps, rir, restSec, category, cues, videoQueries };
-}
 
 function todayIndex() {
   // Workout OS Day 1 is always Sunday. JS getDay() is already Sunday=0.
@@ -365,8 +221,8 @@ function App() {
           <span className="pill"><HeartPulse size={14} /> Workout OS</span>
           <span className={`pill sync ${syncStatus}`}>{CLOUD_ENABLED ? syncStatus : 'local-first'}</span>
         </div>
-        <h1>Talal's Hybrid Longevity Program</h1>
-        <p>Day 1 starts Sunday. Upper-body aesthetics, posture, KOT joints, mobility, and fixed Day 2 + Day 4 runs — one hour, minimal moving parts.</p>
+        <h1>Talal's 3 Gym + 3 Home Program</h1>
+        <p>Fixed gym days Sunday, Tuesday, and Thursday. Home movement Monday, Wednesday, and Friday. Strength, aesthetics, posture, heart health, mobility, joints, and fascia — 60 minutes with a 20-minute fallback.</p>
         <div className="hero-stats">
           <div><strong>{completionPct}%</strong><span>today</span></div>
           <div><strong>{day.totalMinutes}</strong><span>min</span></div>
@@ -380,7 +236,7 @@ function App() {
             <div className="day-switcher">
               <button onClick={() => setSelectedDayIndex((i) => (i + 6) % 7)} aria-label="Previous day"><ChevronLeft /></button>
               <div>
-                <p>{['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'][selectedDayIndex]}</p>
+                <p>{['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][selectedDayIndex]}</p>
                 <h2>{day.title}</h2>
                 <span>{day.subtitle}</span>
               </div>
@@ -538,10 +394,22 @@ function VideoSheet({ exercise, close }: { exercise: Exercise; close: () => void
           </div>
           <button className="icon-button" onClick={close} aria-label="Close technique sheet">×</button>
         </div>
+        {exercise.videoId && (
+          <div className="video-embed">
+            <iframe
+              src={`https://www.youtube-nocookie.com/embed/${exercise.videoId}?rel=0`}
+              title={`${exercise.name} technique video`}
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
+            />
+          </div>
+        )}
         <div className="video-links">
           {exercise.videoQueries.map((query) => (
             <a key={query} href={youtubeSearchUrl(query)} target="_blank" rel="noreferrer">
-              <Video size={18} /> {query} <ExternalLink size={14} />
+              <Video size={18} /> More: {query} <ExternalLink size={14} />
             </a>
           ))}
         </div>
