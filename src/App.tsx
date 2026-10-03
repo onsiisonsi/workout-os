@@ -129,7 +129,13 @@ function App() {
   const day = DAYS[selectedDayIndex];
   const currentLog = useMemo(() => {
     const existing = logs.find((log) => log.date === isoToday() && log.dayKey === day.key);
-    return existing ?? createEmptyLog(day);
+    if (!existing) return createEmptyLog(day);
+    const exerciseLog = { ...existing.exerciseLog };
+    day.exercises.forEach((exercise) => {
+      exerciseLog[exercise.id] = Array.from({ length: exercise.sets }, (_, i) =>
+        existing.exerciseLog[exercise.id]?.[i] ?? { reps: '', weight: '', rir: '', done: false });
+    });
+    return { ...existing, dayTitle: day.title, exerciseLog };
   }, [logs, day]);
 
   useEffect(() => {
@@ -163,19 +169,19 @@ function App() {
   }
 
   function updateSet(exerciseId: string, setIndex: number, patch: Partial<SetEntry>) {
-    const base = logs.find((log) => log.id === currentLog.id) ?? currentLog;
+    const base = currentLog;
     const entries = base.exerciseLog[exerciseId] ?? [];
     const nextEntries = entries.map((entry, idx) => (idx === setIndex ? { ...entry, ...patch } : entry));
     upsertLog({ ...base, exerciseLog: { ...base.exerciseLog, [exerciseId]: nextEntries } });
   }
 
   function updateMetric(key: 'readiness' | 'pain' | 'energy', value: number) {
-    const base = logs.find((log) => log.id === currentLog.id) ?? currentLog;
+    const base = currentLog;
     upsertLog({ ...base, [key]: value });
   }
 
   function updateNotes(notes: string) {
-    const base = logs.find((log) => log.id === currentLog.id) ?? currentLog;
+    const base = currentLog;
     upsertLog({ ...base, notes });
   }
 
@@ -199,7 +205,7 @@ function App() {
   }
 
   function completeWorkout() {
-    const base = logs.find((log) => log.id === currentLog.id) ?? currentLog;
+    const base = currentLog;
     const completed = { ...base, completedAt: new Date().toISOString() };
     upsertLog(completed);
     syncLog(completed);
@@ -210,7 +216,7 @@ function App() {
     setTimerRunning(true);
   }
 
-  const completedSets = Object.values(currentLog.exerciseLog).flat().filter((s) => s.done).length;
+  const completedSets = day.exercises.flatMap((exercise) => currentLog.exerciseLog[exercise.id] ?? []).filter((s) => s.done).length;
   const totalSets = day.exercises.reduce((sum, exercise) => sum + exercise.sets, 0);
   const completionPct = totalSets ? Math.round((completedSets / totalSets) * 100) : 0;
 
@@ -250,6 +256,7 @@ function App() {
 
             <Readiness currentLog={currentLog} updateMetric={updateMetric} />
 
+            <WorkoutBlock title="Daily mobility · 8-minute fallback" items={["Ankle rocks + calf raises 1 min; supported squat 1 min", "90/90 switches 2 min; couch stretch 1 min each side", "Thoracic rotations + overhead reaches 2 min", "Comfortable range only. No forcing or sharp pain."]} />
             <WorkoutBlock title="Prep" items={day.warmup} />
 
             <div className="exercise-list">
